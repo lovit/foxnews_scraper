@@ -1,3 +1,7 @@
+from .utils import get_soup
+from .utils import now
+
+
 def parse_headline(soup):
     h1 = soup.select('h1[class=headline]')
     if not h1:
