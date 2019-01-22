@@ -34,9 +34,13 @@ def get_info_from_search_page(query, begin_date, end_date, start):
     def parse_info(doc):
         date = doc.get('date', '')
         description = doc.get('description', '')
-        category = [taxo.get('adTag', '') for taxo in doc.get('taxonomy', [])]
-        category = [c for c in category if c]
-        category = ', '.join(category) if category else ''
+        taxonomy = doc.get('taxonomy', [])
+        if not taxonomy:
+            category = ''
+        else:
+            category = [taxo.get('adTag', '') for taxo in taxonomy]
+            category = [c for c in category if c]
+            category = ', '.join(category) if category else ''
         title = doc.get('title', '')
         url = doc.get('url', [''])
         if isinstance(url, list):
@@ -53,5 +57,11 @@ def get_info_from_search_page(query, begin_date, end_date, start):
     # len('angular.callbacks._0(') = 21, last character is ')'
     response = json.loads(r.text[21:-1])
     num_found = response.get('response', {}).get('numFound', 0)
-    docs = [parse_info(doc) for doc in response.get('response', {}).get('docs', [])]
+    docs = []
+    for doc in response.get('response', {}).get('docs', []):
+        try:
+            docs.append(parse_info(doc))
+        except:
+            continue
+
     return docs, num_found
