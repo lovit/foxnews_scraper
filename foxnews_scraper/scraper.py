@@ -55,7 +55,10 @@ def get_info_from_search_page(query, begin_date, end_date, start):
         'User-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
     r = requests.get(request_url, headers=headers)
     # len('angular.callbacks._0(') = 21, last character is ')'
-    response = json.loads(r.text[21:-1])
+    try:
+        response = json.loads(r.text[21:-1])
+    except:
+        return []
     num_found = response.get('response', {}).get('numFound', 0)
     docs = []
     for doc in response.get('response', {}).get('docs', []):
