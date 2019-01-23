@@ -58,6 +58,8 @@ def get_info_from_search_page(query, begin_date, end_date, start):
     try:
         response = json.loads(r.text[21:-1])
     except:
+        print('Sleep 10 minutes. Response error')
+        time.sleep(600)
         return []
     num_found = response.get('response', {}).get('numFound', 0)
     docs = []
