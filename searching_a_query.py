@@ -34,7 +34,11 @@ def main():
 
     for article in yield_articles_from_search_result(query, begin_date, end_date, max_num, sleep):
         save(article, directory)
-        print('scraped {}'.format(article.get('url'), ''))
+        url = article.get('url', '')
+        date = article.get('date', '')[:10]
+        if date:
+            url = ' ' + url
+        print('scraped {}{}'.format(date, url))
 
 if __name__ == '__main__':
     main()
